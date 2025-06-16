@@ -3254,16 +3254,34 @@ void equip(item *theItem) {
                 message("you are already wearing that ring.", 0);
                 return;
             } else if (rogue.ringLeft && rogue.ringRight) {
-                confirmMessages();
-                theItem2 = promptForItemOfType((RING), ITEM_EQUIPPED, 0,
-                                               "You are already wearing two rings; remove which first?", true);
-                if (!theItem2 || theItem2->category != RING || !(theItem2->flags & ITEM_EQUIPPED)) {
-                    if (theItem2) { // No message if canceled or did an inventory action instead.
-                        message("Invalid entry.", 0);
-                    }
+                // Check for cursed rings first
+                boolean leftCursed = (rogue.ringLeft->flags & ITEM_CURSED);
+                boolean rightCursed = (rogue.ringRight->flags & ITEM_CURSED);
+                
+                if (leftCursed && rightCursed) {
+                    // Both rings are cursed
+                    confirmMessages();
+                    message("Both rings are cursed.", 0);
                     return;
-                } else {
+                } else if (leftCursed || rightCursed) {
+                    // One ring is cursed, automatically replace the uncursed one
+                    confirmMessages();
+                    message("One ring is cursed; replacing the other one", 0);
+                    theItem2 = leftCursed ? rogue.ringRight : rogue.ringLeft;
                     command[c++] = theItem2->inventoryLetter;
+                } else {
+                    // Neither ring is cursed, prompt user to choose
+                    confirmMessages();
+                    theItem2 = promptForItemOfType((RING), ITEM_EQUIPPED, 0,
+                                                   "You are already wearing two rings; remove which first?", true);
+                    if (!theItem2 || theItem2->category != RING || !(theItem2->flags & ITEM_EQUIPPED)) {
+                        if (theItem2) { // No message if canceled or did an inventory action instead.
+                            message("Invalid entry.", 0);
+                        }
+                        return;
+                    } else {
+                        command[c++] = theItem2->inventoryLetter;
+                    }
                 }
             }
         }
