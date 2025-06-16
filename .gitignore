@@ -1,6 +1,7 @@
 *.o
 bin/*.brogue*
 bin/BrogueHighScores.txt
+bin/BrogueRunHistory.txt
 bin/brogue*
 bin/*.png
 vars
