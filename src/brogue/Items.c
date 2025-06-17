@@ -1379,8 +1379,10 @@ void call(item *theItem) {
                 recordKeystroke(RETURN_KEY, false, false);
             }
             return;
-        } else if (confirm("Inscribe this particular item instead of all similar items?", true)) {
-            command[c++] = 'y'; // y means yes, since the recording also needs to negotiate the above confirmation prompt.
+        } else if (confirm("Inscribe all instances of this item?", true)) {
+            command[c++] = 'y'; // y means yes, inscribe all instances
+        } else {
+            command[c++] = 'n'; // n means no, inscribe only this instance
             if (inscribeItem(theItem)) {
                 command[c++] = '\0';
                 strcat((char *) command, theItem->inscription);
@@ -1388,15 +1390,16 @@ void call(item *theItem) {
                 recordKeystroke(RETURN_KEY, false, false);
             }
             return;
-        } else {
-            command[c++] = 'n'; // n means no
         }
     }
 
     if (tableForItemCategory(theItem->category)
         && !(tableForItemCategory(theItem->category)[theItem->kind].identified)) {
-
-        if (getInputTextString(itemText, "call them: \"", 29, "", "\"", TEXT_INPUT_NORMAL, false)) {
+        const char *prompt = "call them: \"";
+        if (c > 0 && command[c-1] == 'n') { // just inscribed this one
+            prompt = "Call this one: ";
+        }
+        if (getInputTextString(itemText, prompt, 29, "", "\"", TEXT_INPUT_NORMAL, false)) {
             command[c++] = '\0';
             strcat((char *) command, itemText);
             recordKeystrokeSequence(command);
@@ -1879,8 +1882,7 @@ static boolean monsterClassHasAcidicMonster(const short classID) {
 void itemDetails(char *buf, item *theItem) {
     char buf2[1000], buf3[1000], theName[500], goodColorEscape[20], badColorEscape[20], whiteColorEscape[20];
     boolean singular, carried;
-    fixpt enchant;
-    fixpt currentDamage, newDamage;
+    fixpt enchant, currentDamage, newDamage;
     short nextLevelState = 0, new, current, accuracyChange, damageChange;
     unsigned long turnsSinceLatestUse;
     const char weaponRunicEffectDescriptions[NUMBER_WEAPON_RUNIC_KINDS][DCOLS] = {
@@ -2348,7 +2350,7 @@ void itemDetails(char *buf, item *theItem) {
                                             (int) armorAbsorptionMax(enchant),
                                             (int) (100 * armorAbsorptionMax(enchant) / player.info.maxHP),
                                             theName,
-                                            (armorAbsorptionMax(enchant) == armorAbsorptionMax(enchant + enchantIncrement(theItem)) ? "remain at" : "increase to"),
+                                            (armorAbsorptionMax(enchant) == armorAbsorptionMax(enchant + enchantMagnitude() * enchantIncrement(theItem)) ? "remain at" : "increase to"),
                                             (int) armorAbsorptionMax(enchant + enchantMagnitude() * enchantIncrement(theItem)));
                                 } else {
                                     strcpy(buf2, "It will reduce the damage of inbound attacks by a random amount determined by its enchantment level. ");
