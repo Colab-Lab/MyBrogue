@@ -419,9 +419,11 @@ void initializeRogue(uint64_t seed) {
     rogue.lightMultiplier = 1;
 
     theItem = generateItem(FOOD, RATION);
+    theItem->inventoryLetter = 'e';
     theItem = addItemToPack(theItem);
 
     theItem = generateItem(WEAPON, DAGGER);
+    theItem->inventoryLetter = 'd';
     theItem->enchant1 = theItem->enchant2 = 0;
     theItem->flags &= ~(ITEM_CURSED | ITEM_RUNIC);
     identify(theItem);
@@ -429,6 +431,7 @@ void initializeRogue(uint64_t seed) {
     equipItem(theItem, false, NULL);
 
     theItem = generateItem(WEAPON, DART);
+    theItem->inventoryLetter = 't';
     theItem->enchant1 = theItem->enchant2 = 0;
     theItem->quantity = 15;
     theItem->flags &= ~(ITEM_CURSED | ITEM_RUNIC);
@@ -436,6 +439,7 @@ void initializeRogue(uint64_t seed) {
     theItem = addItemToPack(theItem);
 
     theItem = generateItem(ARMOR, LEATHER_ARMOR);
+    theItem->inventoryLetter = 'a';
     theItem->enchant1 = 0;
     theItem->flags &= ~(ITEM_CURSED | ITEM_RUNIC);
     identify(theItem);
