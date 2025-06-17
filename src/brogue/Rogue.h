@@ -1209,6 +1209,7 @@ enum tileFlags {
 #define NEW_GAME_KEY        'N'
 #define GRAPHICS_KEY        'G'
 #define SWITCH_TO_PLAYING_KEY 'P'
+#define MANUAL_PICKUP_KEY   'g'
 #define NUMPAD_0            48
 #define NUMPAD_1            49
 #define NUMPAD_2            50
