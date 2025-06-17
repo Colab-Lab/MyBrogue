@@ -1255,9 +1255,24 @@ void getCellAppearance(pos loc, enum displayGlyph *returnChar, color *returnFore
                         } else {
                             applyColorAverage(&cellForeColor, &pink, 50);
                         }
+                    } else {
+                        // Color monsters based on their awareness state
+                        if (monst->creatureState == MONSTER_SLEEPING) {
+                            // Deep blue background for sleeping monsters
+                            applyColorAverage(&cellBackColor, &darkBlue, 70);
+                        } else if (monst->creatureState == MONSTER_WANDERING && !(monst->bookkeepingFlags & MB_CAPTIVE) && monst->info.monsterID != MK_SPECTRAL_BLADE) {
+                            // Gray background for wandering monsters (unaware of player), but not for captives or spectral blades
+                            applyColorAverage(&cellBackColor, &gray, 60);
+                            cellForeColor = black;
+                        } else if (monst->creatureState == MONSTER_FLEEING && !(monst->bookkeepingFlags & MB_CAPTIVE) && monst->info.monsterID != MK_SPECTRAL_BLADE) {
+                            // Yellow background for fleeing monsters, but not for captives or spectral blades
+                            applyColorAverage(&cellBackColor, &yellow, 40);
+                            // Make the monster glyph black for better contrast
+                            cellForeColor = black;
+                        }
+                        // Normal colors for hunting/tracking monsters (MONSTER_TRACKING_SCENT)
                     }
                 }
-                //DEBUG if (monst->bookkeepingFlags & MB_LEADER) applyColorAverage(&cellBackColor, &purple, 50);
             }
         } else if (monst
                    && monsterRevealed(monst)
