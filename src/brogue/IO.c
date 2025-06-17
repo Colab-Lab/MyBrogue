@@ -1289,6 +1289,11 @@ void getCellAppearance(pos loc, enum displayGlyph *returnChar, color *returnFore
                 pmapAt(loc)->rememberedItemQuantity = theItem->quantity;
                 pmapAt(loc)->rememberedItemOriginDepth = theItem->originDepth;
             }
+            
+            // If the item is on a fire tile, make the background fire-colored while keeping the floor tile visible
+            if (cellHasTerrainFlag(loc, T_IS_FIRE)) {
+                cellBackColor = fireForeColor;
+            }
         } else if (playerCanSeeOrSense(loc.x, loc.y) || (pmapAt(loc)->flags & (DISCOVERED | MAGIC_MAPPED))) {
             // just don't want these to be plotted as black
             // Also, ensure we remember there are no items here
@@ -4393,7 +4398,7 @@ void displayGrid(short **map) {
             tempColor.red = max(min(score, 100), 0);
             score -= 100;
             tempColor.green = max(min(score, 100), 0);
-            getCellAppearance((pos){ i, j }, &dchar, &foreColor, &backColor);
+            getCellAppearance((pos){ i, j }, &dchar, &foreColor, &tempColor);
             plotCharWithColor(dchar, mapToWindow((pos){ i, j }), &foreColor, &tempColor);
             //colorBlendCell(i, j, &tempColor, 100);//hiliteCell(i, j, &tempColor, 100, false);
         }
