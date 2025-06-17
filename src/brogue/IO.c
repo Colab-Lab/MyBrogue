@@ -2712,6 +2712,12 @@ void executeKeystroke(signed long keystroke, boolean controlKey, boolean shiftKe
                 flashTemporaryAlert(" Screenshot saved in save directory ", 2000);
             }
             break;
+        case MANUAL_PICKUP_KEY:
+            if (pmapAt(player.loc)->flags & HAS_ITEM) {
+                pickUpItemAt(player.loc);
+                rogue.disturbed = true;
+            }
+            break;
         default:
             break;
     }
