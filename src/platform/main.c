@@ -104,8 +104,8 @@ int main(int argc, char *argv[])
     rogue.nextGamePath[0] = '\0';
     rogue.nextGameSeed = 0;
     rogue.wizard = false;
-    rogue.displayStealthRangeMode = false;
-    rogue.trueColorMode = false;
+    rogue.displayStealthRangeMode = true;
+    rogue.trueColorMode = true;
 
     enum graphicsModes initialGraphics = TEXT_GRAPHICS;
 
