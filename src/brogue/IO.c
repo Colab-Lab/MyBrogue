@@ -1210,6 +1210,25 @@ void getCellAppearance(pos loc, enum displayGlyph *returnChar, color *returnFore
             cellChar = player.info.displayChar;
             cellForeColor = *(player.info.foreColor);
             needDistinctness = true;
+            // Custom ensnarement color logic
+            if (player.status[STATUS_STUCK]) {
+                enum tileType surfaceTile = pmapAt(loc)->layers[SURFACE];
+                if (surfaceTile) {
+                    // Check for netting (rope)
+                    if (tileCatalog[surfaceTile].flags & T_ENTANGLES) {
+                        // Netting (rope) uses brown, web uses white
+                        if (tileCatalog[surfaceTile].foreColor == &brown) {
+                            // Rope/netting ensnarement: background = brown, foreground = black
+                            cellBackColor = brown;
+                            cellForeColor = black;
+                        } else if (tileCatalog[surfaceTile].foreColor == &white) {
+                            // Web ensnarement: background = white, foreground = black
+                            cellBackColor = white;
+                            cellForeColor = black;
+                        }
+                    }
+                }
+            }
         } else if (((pmapAt(loc)->flags & HAS_ITEM) && (pmapAt(loc)->flags & ITEM_DETECTED)
                     && itemMagicPolarity(theItem)
                     && !playerCanSeeOrSense(loc.x, loc.y))
@@ -1258,6 +1277,23 @@ void getCellAppearance(pos loc, enum displayGlyph *returnChar, color *returnFore
                     }
                 }
                 //DEBUG if (monst->bookkeepingFlags & MB_LEADER) applyColorAverage(&cellBackColor, &purple, 50);
+            }
+            // ENSNAREMENT COLOR OVERRIDE FOR MONSTERS
+            if (monst->status[STATUS_STUCK]) {
+                enum tileType surfaceTile = pmapAt(loc)->layers[SURFACE];
+                if (surfaceTile) {
+                    if (tileCatalog[surfaceTile].flags & T_ENTANGLES) {
+                        if (tileCatalog[surfaceTile].foreColor == &brown) {
+                            // Rope/netting ensnarement: background = brown, foreground = black
+                            cellBackColor = brown;
+                            cellForeColor = black;
+                        } else if (tileCatalog[surfaceTile].foreColor == &white) {
+                            // Web ensnarement: background = white, foreground = black
+                            cellBackColor = white;
+                            cellForeColor = black;
+                        }
+                    }
+                }
             }
         } else if (monst
                    && monsterRevealed(monst)
@@ -4393,7 +4429,7 @@ void displayGrid(short **map) {
             tempColor.red = max(min(score, 100), 0);
             score -= 100;
             tempColor.green = max(min(score, 100), 0);
-            getCellAppearance((pos){ i, j }, &dchar, &foreColor, &backColor);
+            getCellAppearance((pos){ i, j }, &dchar, &foreColor, &tempColor);
             plotCharWithColor(dchar, mapToWindow((pos){ i, j }), &foreColor, &tempColor);
             //colorBlendCell(i, j, &tempColor, 100);//hiliteCell(i, j, &tempColor, 100, false);
         }
