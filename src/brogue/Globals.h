@@ -74,6 +74,8 @@ extern const color flameSourceColor;
 extern const color flameSourceColorSecondary;
 extern const color flameTitleColor;
 
+extern const color lichenColor;
+
 // Tables that define game play - may be set by variants
 
 extern color *dynamicColors[NUMBER_DYNAMIC_COLORS];
