@@ -18,8 +18,9 @@
 #+ s
 
 # EXAMPLE: numberpad play 2
-#/ <
-#* >
+/ z
+- <
++ >
 #- a
 #+ s
 

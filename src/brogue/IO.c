@@ -1225,6 +1225,10 @@ void getCellAppearance(pos loc, enum displayGlyph *returnChar, color *returnFore
                             // Web ensnarement: background = white, foreground = black
                             cellBackColor = white;
                             cellForeColor = black;
+                        } else if (tileCatalog[surfaceTile].foreColor == &lichenColor) {
+                            // Vine ensnarement: background = lichenColor, foreground = black
+                            cellBackColor = lichenColor;
+                            cellForeColor = black;
                         }
                     }
                 }
@@ -1306,6 +1310,10 @@ void getCellAppearance(pos loc, enum displayGlyph *returnChar, color *returnFore
                             // Web ensnarement: background = white, foreground = black
                             cellBackColor = white;
                             cellForeColor = black;
+                        } else if (tileCatalog[surfaceTile].foreColor == &lichenColor) {
+                            // Vine ensnarement: background = lichenColor, foreground = black
+                            cellBackColor = lichenColor;
+                            cellForeColor = black;
                         }
                     }
                 }
@@ -1339,6 +1347,20 @@ void getCellAppearance(pos loc, enum displayGlyph *returnChar, color *returnFore
                 pmapAt(loc)->rememberedItemKind = theItem->kind;
                 pmapAt(loc)->rememberedItemQuantity = theItem->quantity;
                 pmapAt(loc)->rememberedItemOriginDepth = theItem->originDepth;
+                // ENSNAREMENT COLOR OVERRIDE FOR ITEMS
+                enum tileType surfaceTile = pmapAt(loc)->layers[SURFACE];
+                if (surfaceTile && (tileCatalog[surfaceTile].flags & T_ENTANGLES)) {
+                    if (tileCatalog[surfaceTile].foreColor == &brown) {
+                        cellBackColor = brown;
+                        cellForeColor = black;
+                    } else if (tileCatalog[surfaceTile].foreColor == &white) {
+                        cellBackColor = white;
+                        cellForeColor = black;
+                    } else if (tileCatalog[surfaceTile].foreColor == &lichenColor) {
+                        cellBackColor = lichenColor;
+                        cellForeColor = black;
+                    }
+                }
             }
             
             // If the item is on a fire tile, make the background fire-colored while keeping the floor tile visible

@@ -868,6 +868,26 @@ void startLevel(short oldLevelNumber, short stairDirection) {
 
     pmapAt(player.loc)->flags |= HAS_PLAYER;
 
+    // TEMP: Spawn a Mangrove Dryad ally adjacent to the player for testing vine ensnarement coloring
+    /*{
+        creature *dryad = generateMonster(MK_ANCIENT_SPIRIT, true, false);
+        pos dryadLoc;
+        // Try to find a valid adjacent location
+        if (getQualifyingLocNear(&dryadLoc, player.loc, true, 0,
+                                 (T_PATHING_BLOCKER),
+                                 (HAS_MONSTER | HAS_ITEM | HAS_STAIRS | IS_IN_MACHINE), false, false)) {
+            dryad->loc = dryadLoc;
+            pmapAt(dryadLoc)->flags |= HAS_MONSTER;
+            becomeAllyWith(dryad);
+            // Optional: Display a message for confirmation
+            message("A Mangrove Dryad ally has been summoned for testing.", 0);
+        } else {
+            // If no valid location, free the Dryad
+            freeCreature(dryad);
+        }
+    }*/
+    // END TEMP
+
     // Notify the player if they arrive standing on (or otherwise in the same location as) an item
     if (itemAtLoc(player.loc)) {
         item *theItem = itemAtLoc(player.loc);
